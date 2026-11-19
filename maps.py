@@ -246,10 +246,153 @@ def _point_in_poly(px, py, poly):
     return inside
 
 
-def world_map_dotted(cv, x, y, w, h, pins, dots):
+def _proj(x, y, w, h, lon, lat):
+    return (x + int((lon + 170) / 360.0 * w),
+            y + int((75 - lat) / 130.0 * h))
+
+
+def layout_world_points(x, y, w, h, pins, dots, leaders=None):
+    """Deterministic collision-free layout for the dotted world map.
+
+    pins: [(lon, lat, num)] single numbered pins (red circle + white
+        halo). leaders: [(lon, lat, num, chip_lon, chip_lat)] pins too
+        close together for two circles — a small red dot at the true
+        spot + a numbered chip in clear ocean with a thin grey leader
+        line (Shenzhen 3 and Taiwan 13 are 7 degrees apart).
+    dots: [(lon, lat, color)] brief dots; displaced deterministically so
+        no dot overlaps a pin halo, a chip, or another dot (max 20px from
+        its true spot; a dot that cannot be placed cleanly is dropped and
+        listed in `dropped`).
+
+    Returns (pin_draws, dot_draws, dropped):
+      pin_draws: {'kind': 'pin', 'cx', 'cy', 'r', 'num'} or
+                 {'kind': 'leader', 'dx', 'dy', 'num', 'cx', 'cy',
+                  'cw', 'ch'} (dx,dy = true spot; cx,cy = chip top-left)
+      dot_draws: [(px, py, color)]
+      dropped: [(lon, lat, color)] dots that could not be placed cleanly.
+    """
+    import math
+    from draw import text_w as _tw
+    leaders = leaders or []
+    pin_draws = []
+    obstacles = []  # (cx, cy, radius) circles dots must avoid
+    for lon, lat, num in pins:
+        cx, cy = _proj(x, y, w, h, lon, lat)
+        r = 9 if len(str(num)) > 1 else 8
+        pin_draws.append({"kind": "pin", "cx": cx, "cy": cy, "r": r,
+                          "num": num})
+        obstacles.append((cx, cy, r + 7))
+    chip_rects = []  # (x0, y0, x1, y1) with margin, for dot avoidance
+    for lon, lat, num, clon, clat in leaders:
+        dx, dy = _proj(x, y, w, h, lon, lat)
+        cw = _tw(str(num), 0.9, bold=True) + 6
+        ch = 13
+        cx, cy = _proj(x, y, w, h, clon, clat)
+        pin_draws.append({"kind": "leader", "dx": dx, "dy": dy, "num": num,
+                          "cx": cx, "cy": cy, "cw": cw, "ch": ch})
+        obstacles.append((dx, dy, 10))
+        chip_rects.append((cx - 3, cy - 3, cx + cw + 3, cy + ch + 3))
+    # --- dots: project, then displace -----------------------------------
+    # pts: [x, y, ox, oy, color, lon, lat]
+    pts = []
+    for lon, lat, color in dots:
+        px, py = _proj(x, y, w, h, lon, lat)
+        pts.append([float(px), float(py), float(px), float(py), color,
+                    lon, lat])
+
+    def _push_out_of_obstacles(p):
+        for _ in range(8):
+            moved = False
+            for (ox, oy, orad) in obstacles:
+                d = math.hypot(p[0] - ox, p[1] - oy)
+                need = orad + 4
+                if d < need:
+                    if d < 0.5:
+                        ang = math.radians(45)
+                    else:
+                        ang = math.atan2(p[1] - oy, p[0] - ox)
+                    p[0] = ox + (need + 1) * math.cos(ang)
+                    p[1] = oy + (need + 1) * math.sin(ang)
+                    moved = True
+            for (rx0, ry0, rx1, ry1) in chip_rects:
+                if rx0 - 4 <= p[0] <= rx1 + 4 and ry0 - 4 <= p[1] <= ry1 + 4:
+                    dl = p[0] - (rx0 - 4)
+                    dr = (rx1 + 4) - p[0]
+                    dt = p[1] - (ry0 - 4)
+                    db = (ry1 + 4) - p[1]
+                    m = min(dl, dr, dt, db)
+                    if m == dl:
+                        p[0] = rx0 - 5
+                    elif m == dr:
+                        p[0] = rx1 + 5
+                    elif m == dt:
+                        p[1] = ry0 - 5
+                    else:
+                        p[1] = ry1 + 5
+                    moved = True
+            if not moved:
+                break
+
+    for p in pts:
+        _push_out_of_obstacles(p)
+    # dot-dot separation: deterministic relaxation passes
+    for _ in range(30):
+        moved_any = False
+        for i in range(len(pts)):
+            for j in range(i + 1, len(pts)):
+                dx = pts[j][0] - pts[i][0]
+                dy = pts[j][1] - pts[i][1]
+                d = math.hypot(dx, dy)
+                if d < 7.5:
+                    if d < 0.5:
+                        ang = math.radians((i * 137) % 360)
+                        dx, dy = math.cos(ang), math.sin(ang)
+                        d = 1.0
+                    push = (7.5 - d) / 2 + 0.25
+                    ux, uy = dx / d, dy / d
+                    pts[i][0] -= ux * push
+                    pts[i][1] -= uy * push
+                    pts[j][0] += ux * push
+                    pts[j][1] += uy * push
+                    moved_any = True
+        for p in pts:
+            p[0] = min(max(p[0], x + 5), x + w - 5)
+            p[1] = min(max(p[1], y + 5), y + h - 5)
+            dd = math.hypot(p[0] - p[2], p[1] - p[3])
+            if dd > 20:
+                p[0] = p[2] + (p[0] - p[2]) * 20 / dd
+                p[1] = p[3] + (p[1] - p[3]) * 20 / dd
+        for p in pts:
+            _push_out_of_obstacles(p)
+        if not moved_any:
+            break
+    dot_draws = []
+    dropped = []
+    for p in pts:
+        ok = True
+        for (ox, oy, orad) in obstacles:
+            if math.hypot(p[0] - ox, p[1] - oy) < orad + 3:
+                ok = False
+        for (rx0, ry0, rx1, ry1) in chip_rects:
+            if rx0 - 3 <= p[0] <= rx1 + 3 and ry0 - 3 <= p[1] <= ry1 + 3:
+                ok = False
+        if ok:
+            dot_draws.append((int(round(p[0])), int(round(p[1])), p[4]))
+        else:
+            dropped.append((p[5], p[6], p[4]))
+    return pin_draws, dot_draws, dropped
+
+
+def world_map_dotted(cv, x, y, w, h, pins, dots, leaders=None):
     """Dotted world map: grey dots form the continents on a pale
-    blue-grey field. pins: (lon, lat, number) red numbered pins.
-    dots: (lon, lat, colour) small region-coloured dots."""
+    blue-grey field. pins: (lon, lat, number) red numbered pins with a
+    white halo, so each sits clear of the dot field. dots: (lon, lat,
+    colour) small region-coloured brief dots with a white halo, placed
+    collision-free (see layout_world_points). leaders: (lon, lat, number,
+    chip_lon, chip_lat) pins too close together for two circles — a small
+    red dot at the true spot and a numbered chip in clear ocean with a
+    thin grey leader line. Returns the list of dropped dots (empty when
+    every dot placed cleanly)."""
     cv.rect(x, y, w, h, (232, 236, 240))
     # project continent outlines once, with bounding boxes
     projected = []
@@ -272,148 +415,39 @@ def world_map_dotted(cv, x, y, w, h, pins, dots):
                         on_land = True
                         break
             if on_land:
-                cv.circle(gx, gy, 2, (140, 145, 150))
-    for lon, lat, color in dots:
+                cv.circle(gx, gy, 2, (178, 183, 188))
+    # New Zealand's real outline is sub-grid at this scale (its thin
+    # diagonal renders as zero grid dots), so its two islands are drawn
+    # as four explicit dots on the same rhythm — same grey, same size
+    # as the other continent dots, at true NZ positions.
+    for lon, lat in ((176, -37), (172, -40), (169, -43), (166, -46)):
         px = x + int((lon + 170) / 360.0 * w)
         py = y + int((75 - lat) / 130.0 * h)
+        cv.circle(px, py, 2, (178, 183, 188))
+    from draw import text_w as _tw
+    pin_draws, dot_draws, dropped = layout_world_points(
+        x, y, w, h, pins, dots, leaders)
+    for px, py, color in dot_draws:
+        cv.circle(px, py, 4, (255, 255, 255))
         cv.circle(px, py, 3, color)
-    from draw import text_w as _tw
-    from draw import text_w as _tw
-    # --- pin placement: cluster rows -------------------------------------
-    # Pins closer than 26px to another pin form a cluster. Big clusters
-    # split into an upper half (row of boxes ABOVE the pins) and a lower
-    # half (row BELOW), each row x-ordered to match its pins, so the
-    # thin leader lines are short and can never cross. Small clusters
-    # (<=3 pins) get a single row, above or below, whichever hits fewer
-    # dots. Row y is chosen from two candidates by fewest collisions.
-    proj = []
-    for lon, lat, num in pins:
-        px = x + int((lon + 170) / 360.0 * w)
-        py = y + int((75 - lat) / 130.0 * h)
-        proj.append((px, py, num))
-    dot_pts = []
-    for lon, lat, _color in dots:
-        dot_pts.append((x + int((lon + 170) / 360.0 * w),
-                        y + int((75 - lat) / 130.0 * h)))
-    n = len(proj)
-    parent = list(range(n))
-
-    def _find(a):
-        while parent[a] != a:
-            parent[a] = parent[parent[a]]
-            a = parent[a]
-        return a
-
-    for i in range(n):
-        for j in range(i + 1, n):
-            if ((proj[i][0] - proj[j][0]) ** 2
-                    + (proj[i][1] - proj[j][1]) ** 2) < 26 * 26:
-                ri, rj = _find(i), _find(j)
-                if ri != rj:
-                    parent[ri] = rj
-    clusters = {}
-    for i in range(n):
-        clusters.setdefault(_find(i), []).append(i)
-    placed = []  # (x0, y0, x1, y1) boxes already on the map
-
-    def _row_hits(bx0, by0, bx1, by1, own):
-        if bx0 < x + 2 or by0 < y + 2 or bx1 > x + w - 2 or by1 > y + h - 2:
-            return 999
-        hits = 0
-        for (ox0, oy0, ox1, oy1) in placed:
-            if bx0 < ox1 + 2 and bx1 > ox0 - 2 and by0 < oy1 + 2 and by1 > oy0 - 2:
-                hits += 1
-        for (dx, dy) in dot_pts:
-            if bx0 - 3 <= dx <= bx1 + 3 and by0 - 3 <= dy <= by1 + 3:
-                hits += 1
-        for k, (ox, oy, _num) in enumerate(proj):
-            if k in own:
-                continue
-            if bx0 - 4 <= ox <= bx1 + 4 and by0 - 4 <= oy <= by1 + 4:
-                hits += 1
-        return hits
-
-    def _place_row(half, above):
-        """One row of number boxes for the given pin indices."""
-        half = sorted(half, key=lambda i: proj[i][0])
-        widths = [_tw(str(proj[i][2]), 1, bold=True) + 8 for i in half]
-        total = sum(widths) + 4 * (len(half) - 1)
-        cx = sum(proj[i][0] for i in half) / len(half)
-        min_py = min(proj[i][1] for i in half)
-        max_py = max(proj[i][1] for i in half)
-        if above:
-            cands = [max(y + 2, min_py - 20), max(y + 2, min_py - 36)]
-        else:
-            cands = [min(y + h - 16, max_py + 6), min(y + h - 16, max_py + 24)]
-        own = set(half)
-        best = None
-        for ry in cands:
-            sx = int(min(max(cx - total / 2, x + 2), x + w - 2 - total))
-            hits = 0
-            bx = sx
-            for wd in widths:
-                hits += _row_hits(bx, ry, bx + wd, ry + 14, own)
-                bx += wd + 4
-            if best is None or hits < best[0]:
-                best = (hits, ry, sx)
-        _hits, ry, sx = best
-        bx = sx
-        for i, wd in zip(half, widths):
-            px, py, num = proj[i]
-            num_s = str(num)
-            if above:
-                cv.line(px, py, bx + wd // 2, ry + 14, INK, 1)
-            else:
-                cv.line(px, py, bx + wd // 2, ry, INK, 1)
-            cv.circle(px, py, 4, RED)
-            cv.rect(bx, ry, wd, 14, (255, 255, 255))
-            cv.hline(bx, bx + wd - 1, ry, RED, 1)
-            cv.hline(bx, bx + wd - 1, ry + 13, RED, 1)
-            draw_text(cv, bx + 4, ry + 1, num_s, 1, RED, bold=True)
-            placed.append((bx, ry, bx + wd, ry + 14))
-            bx += wd + 4
-
-    for members in clusters.values():
-        if len(members) == 1:
-            px, py, num = proj[members[0]]
-            r = 9 if len(str(num)) > 1 else 8
-            cv.circle(px, py, r, RED)
+    for pd in pin_draws:
+        if pd["kind"] == "pin":
+            cx, cy, r, num = pd["cx"], pd["cy"], pd["r"], pd["num"]
+            cv.circle(cx, cy, r + 3, (255, 255, 255))
+            cv.circle(cx, cy, r, RED)
             nw = _tw(str(num), 1, bold=True)
-            draw_text(cv, px - nw // 2, py - 6, str(num), 1,
+            draw_text(cv, cx - nw // 2, cy - 6, str(num), 1,
                       (255, 255, 255), bold=True)
-            placed.append((px - r, py - r, px + r, py + r))
-            continue
-        if len(members) >= 4:
-            # split by height: upper half gets a row above, lower half below
-            by_py = sorted(members, key=lambda i: proj[i][1])
-            half_n = len(by_py) // 2
-            _place_row(by_py[:half_n], above=True)
-            _place_row(by_py[half_n:], above=False)
         else:
-            # single row: score above vs below, place the better one
-            min_py = min(proj[i][1] for i in members)
-            max_py = max(proj[i][1] for i in members)
-            above_y = max(y + 2, min_py - 20)
-            below_y = min(y + h - 16, max_py + 6)
-
-            def _score(ry):
-                half = sorted(members, key=lambda i: proj[i][0])
-                widths = [_tw(str(proj[i][2]), 1, bold=True) + 8
-                          for i in half]
-                total = sum(widths) + 4 * (len(half) - 1)
-                cx = sum(proj[i][0] for i in half) / len(half)
-                sx = int(min(max(cx - total / 2, x + 2), x + w - 2 - total))
-                hits = 0
-                bx = sx
-                for wd in widths:
-                    hits += _row_hits(bx, ry, bx + wd, ry + 14, set(members))
-                    bx += wd + 4
-                return hits
-
-            if _score(below_y) < _score(above_y):
-                _place_row(members, above=False)
-            else:
-                _place_row(members, above=True)
+            dx, dy = pd["dx"], pd["dy"]
+            cx, cy, cw, ch = pd["cx"], pd["cy"], pd["cw"], pd["ch"]
+            cv.line(dx, dy, cx + cw // 2, cy, (150, 155, 160), 1)
+            cv.circle(dx, dy, 6, (255, 255, 255))
+            cv.circle(dx, dy, 3, RED)
+            cv.rect(cx, cy, cw, ch, RED)
+            draw_text(cv, cx + 3, cy + 1, str(pd["num"]), 0.9,
+                      (255, 255, 255), bold=True)
+    return dropped
 
 
 def world_map(cv, x, y, w, h, dots):

@@ -51,40 +51,40 @@ FEATURED = [
      "Second strike in two days. Traffic halted.", "Reuters", 36, 45),
     (2, "MIDDLE EAST", "IRAN WAR", "gulf",
      "Iran drones hit US base in Bahrain",
-     "US jets hit Qeshm in reply; Kuwait hit too.", "Reuters", 50, 26),
+     "Qeshm struck in reply; Kuwait also.", "Reuters", 50, 26),
     (3, "ASIA", "SUMMIT EVE", "shenzhen",
      "Trump flies to China for first Xi-Putin summit",
-     "Thursday in Shenzhen: Ukraine, nukes, trade.", "Reuters", 114, 22),
+     "Meets Thursday in Shenzhen: Ukraine, trade.", "Reuters", 114, 22),
     (4, "MIDDLE EAST", "GULF WAR", "tanker",
      "US sinks five Iranian tankers",
-     "Five tankers sunk in the Gulf on Wednesday.", "Reuters", 52, 25),
+     "Four lost in the Gulf of Oman.", "Reuters", 52, 25),
     (5, "EUROPE", "UKRAINE WAR", "refinery",
      "Russia refining nearly halved",
-     "Refinery output falls to near half.", "Reuters", 37, 55),
+     "Drones hit 15 of 35 refineries.", "Reuters", 37, 55),
     (6, "AMERICAS", "MARKETS", "chip",
-     "Nvidia beats forecast, +4.8%",
-     "The chipmaker tops forecasts; shares climb 4.8%.", "Bloomberg", -122, 37),
+     "Nvidia beats forecast",
+     "Revenue $115.8B, up 103%.", "Bloomberg", -122, 37),
     (7, "EUROPE", "EARTHQUAKE", "quake",
      "Romania quake, magnitude 5.3",
-     "A 5.3-magnitude quake shakes Romania.", "AFP", 26, 44),
+     "Felt in Moldova and Ukraine.", "AFP", 26, 44),
     (8, "MIDDLE EAST", "ISRAEL", "parliament",
      "Knesset picks new speaker",
-     "Israel's parliament elects a new speaker.", "AP", 35, 32),
+     "Kahana takes the chair, 66–52.", "AP", 35, 32),
     (9, "MIDDLE EAST", "MISSILES", "missiles",
      "Houthis fire missiles at Riyadh",
-     "Missiles fired at the Saudi capital.", "AFP", 47, 25),
+     "Aimed at the Saudi capital.", "AFP", 47, 25),
     (10, "AMERICAS", "MARKETS", "chart_down",
      "S&P 500 falls for 4th day",
-     "Wall Street's slide stretches to a fourth day.", "AP", -74, 41),
+     "Lowest close since July.", "AP", -74, 41),
     (11, "EUROPE", "TENNIS", "tennis",
      "Zverev books ATP Finals semis",
-     "The German reaches the last four in Turin.", "AP", 7, 45),
+     "Beat Shelton 6-2, 7-6 in Turin.", "AP", 7, 45),
     (12, "WORLD", "CLIMATE", "globe",
      "COP31 draft splits the talks",
-     "A draft deal divides the climate talks.", "AP", 30, 37),
+     "The phaseout wording divides.", "AP", 30, 37),
     (13, "ASIA", "DEFENCE", "jet",
      "Taiwan awaits $14B arms sale OK",
-     "The $14B package awaits a green light.", "Reuters", 121, 25),
+     "Needs Washington's sign-off.", "Reuters", 121, 25),
 ]
 
 # n, region, place, headline, source, lon, lat
@@ -93,18 +93,18 @@ FEATURED = [
 BRIEFS = [
     (14, "EUROPE", "Rome", "Italy passes antisemitism law", "AP", 12, 42),
     (15, "ASIA", "Tokyo", "Japan airspace breach", "Reuters", 140, 36),
-    (16, "MIDDLE EAST", "Tehran", "Iran shuts sea zone to ships", "Reuters", 51, 36),
+    (16, "MIDDLE EAST", "Tehran", "Iran closes Hormuz to shipping", "Reuters", 51, 36),
     (17, "AMERICAS", "DC", "Trump warns of 'dirty bomb' plot", "AP", -77, 39),
-    (18, "MIDDLE EAST", "Gaza", "UN warns of Gaza cold deaths", "AP", 34, 31),
-    (19, "MIDDLE EAST", "Kuwait City", "Kuwait downs drone wave", "Reuters", 48, 29),
-    (20, "ASIA", "Asia", "Asia stocks snap losing run", "Bloomberg", 121, 31),
+    (18, "MIDDLE EAST", "Gaza", "UN warns of cold deaths", "AP", 34, 31),
+    (19, "MIDDLE EAST", "Kuwait", "Downs drone wave", "Reuters", 48, 29),
+    (20, "ASIA", "Asia", "Stocks snap losing run", "Bloomberg", 100, 25),
     (21, "AMERICAS", "US", "Dollar hits a 19-month high", "Reuters", -100, 39),
     (22, "WORLD", "World", "Bitcoin holds near $64,500", "Bloomberg", -80, 35),
     (23, "AMERICAS", "US", "Anthropic prices IPO at $83", "Bloomberg", -121, 38),
     (24, "EUROPE", "Madrid", "Alcaraz tops group, semis bound", "AP", -4, 40),
     (25, "OCEANIA", "Pacific", "Island states want $500M", "AFP", 165, -12),
     (26, "WORLD", "World", "M1.1 solar flare recorded", "AP", 0, 45),
-    (27, "AMERICAS", "US", "US loses measles-free status", "AP", -95, 42),
+    (27, "AMERICAS", "US", "Loses measles-free status", "AP", -95, 42),
     (28, "AMERICAS", "DC", "Biden memoir: Putin 'teenager'", "AP", -75, 40),
     (29, "AMERICAS", "DC", "Trump-plot merchant gets 27 years", "AP", -79, 38),
     (30, "AMERICAS", "DC", "Democrats eye first Black Speaker", "AP", -77, 41),
@@ -116,10 +116,10 @@ BRIEFS = [
     (36, "ASIA", "Dhaka", "Bangladesh leader killed in clashes", "AP", 90, 24),
     (37, "ASIA", "Delhi", "India malaria down 80% in decade", "AP", 77, 28),
     (38, "MIDDLE EAST", "Hormuz", "Tanker crew still missing", "Reuters", 56, 26),
-    (39, "MIDDLE EAST", "Aden", "Houthis advance on Aden", "Reuters", 45, 13),
+    (39, "MIDDLE EAST", "Yemen", "Houthis advance on Aden", "Reuters", 45, 13),
     (40, "ASIA", "Beijing", "Xi: tear down trade barriers", "Reuters", 116, 40),
     (41, "AMERICAS", "DC", "Trump pulls FDA nominee Overton", "AP", -77, 39),
-    (42, "EUROPE", "Turin", "Tiafoe routs Cobolli in Turin", "AP", 7, 45),
+    (42, "EUROPE", "Turin", "Tiafoe routs Cobolli", "AP", 7, 45),
     (43, "WORLD", "London", "Earthshot: $1.3M prizes", "BBC", 0, 51),
     (44, "WORLD", "Antalya", "US absent from COP31 again", "AP", 30, 37),
     (45, "ASIA", "Pakistan", "Petrol price cut to Rs325", "Reuters", 73, 33),
@@ -186,8 +186,8 @@ def numbers_strip(cv):
     label = "THE DAY IN NUMBERS:"
     draw_text(cv, 20, y, label, 1, INK, bold=True)
     x = 20 + int(text_w(label, 1, bold=True)) + 12
-    figures = ["5 tankers sunk", "5.3 quake", "$64,500 Bitcoin",
-               "+4.8% Nvidia", "27-year sentence"]
+    figures = ["5 tankers sunk", "$14B arms sale", "$64,500 Bitcoin",
+               "$115.8B Nvidia", "80% malaria down", "M1.1 solar flare"]
     for i, fig in enumerate(figures):
         draw_text(cv, x, y, fig, 1, RED, bold=True)
         x += int(text_w(fig, 1, bold=True))
@@ -206,22 +206,22 @@ def strip(cv, x, y, w, number, region, topic, src, color, scale=0.9):
 
 def lead_card(cv, x, y, w, feat):
     n, region, topic, mini, headline, deck, src, _, _ = feat
-    h = 176
+    h = 190
     cv.rect(x, y, w, h, CARD)
     cv.hline(x, x + w, y, INK, 1)
     cv.hline(x, x + w, y + h - 1, INK, 1)
     cv.vline(x, y, y + h - 1, INK, 1)
     cv.vline(x + w - 1, y, y + h - 1, INK, 1)
-    MINIS[mini](cv, x + 4, y + 4, w - 8, 48)
-    strip(cv, x + 4, y + 56, w - 8, n, region, topic, src,
+    MINIS[mini](cv, x + 4, y + 4, w - 8, 66)
+    strip(cv, x + 4, y + 74, w - 8, n, region, topic, src,
           REGION_COLOR[region], scale=0.9)
     lines = wrap_text(headline, 1.6, w - 12, bold=True, font="serif")
-    hy = y + 82
+    hy = y + 102
     for ln in lines[:2]:
         draw_text(cv, x + 6, hy, ln, 1.6, INK, bold=True, font="serif")
-        hy += 23
+        hy += 24
     dlines = wrap_text(deck, 1, w - 12, font="serif")
-    dy = y + 134
+    dy = y + 156
     for ln in dlines[:2]:
         draw_text(cv, x + 6, dy, ln, 1, MUTED, font="serif")
         dy += 13
@@ -229,18 +229,18 @@ def lead_card(cv, x, y, w, feat):
 
 def small_card(cv, x, y, w, feat):
     n, region, topic, mini, headline, deck, src, _, _ = feat
-    h = 126
+    h = 119
     cv.rect(x, y, w, h, CARD)
     cv.hline(x, x + w, y, INK, 1)
     cv.hline(x, x + w, y + h - 1, INK, 1)
     cv.vline(x, y, y + h - 1, INK, 1)
     cv.vline(x + w - 1, y, y + h - 1, INK, 1)
-    MINIS[mini](cv, x + 3, y + 3, w - 6, 30)
+    MINIS[mini](cv, x + 3, y + 3, w - 6, 34)
     # strip: number + region only (topic does not fit with the source)
-    cv.rect(x + 3, y + 36, w - 6, 15, REGION_COLOR[region])
-    draw_text(cv, x + 9, y + 38, "%d · %s" % (n, region), 0.8,
+    cv.rect(x + 3, y + 37, w - 6, 15, REGION_COLOR[region])
+    draw_text(cv, x + 9, y + 39, "%d · %s" % (n, region), 0.8,
               (255, 255, 255), bold=True)
-    draw_text(cv, x + w - 9, y + 38, src, 0.8, (255, 255, 255), bold=True,
+    draw_text(cv, x + w - 9, y + 39, src, 0.8, (255, 255, 255), bold=True,
               align="right")
     lines = wrap_text(headline, 1.15, w - 10, bold=True, font="serif")
     hy = y + 56
@@ -260,27 +260,60 @@ def bottom_band(cv):
     draw_text(cv, 420, y0, "ALSO ON WEDNESDAY 18 NOVEMBER", 1, NAVY, bold=True)
     cv.rect(20, y0 + 16, 380, 2, RED)
     cv.rect(420, y0 + 16, 584, 2, NAVY)
-    # dotted world map: red pins (1-13, auto-placed boxes where crowded)
-    # and region dots (14-45)
-    pins = [(lon, lat, n) for (n, _, _, _, _, _, _, lon, lat) in FEATURED]
+    # dotted world map, pass 4: only two single pins (6/10 Americas)
+    # sit on the map as red circles with white halos. Shenzhen 3 and
+    # Taiwan 13 are 7 degrees apart, so they are leader pins: a small
+    # red dot at the true spot + a numbered chip in clear ocean with a
+    # thin grey leader line. The nine Europe/Middle East featured
+    # stories are keyed by place below the map (a standard newspaper
+    # device); brief dots for Europe/Middle East are left off the map
+    # entirely, so the region reads clean instead of a touching blob.
+    # The remaining brief dots are placed collision-free (white halos,
+    # never overlapping a pin, a chip, or another dot).
+    pins = [(lon, lat, n) for (n, _, _, _, _, _, _, lon, lat) in FEATURED
+            if n in (6, 10)]
+    leaders = [(114, 22, 3, 118, 8), (121, 25, 13, 136, 18)]
     dots = [(lon, lat, REGION_COLOR[r])
-            for (_, r, _, _, _, lon, lat) in BRIEFS]
-    world_map_dotted(cv, 20, y0 + 24, 380, 176, pins, dots)
-    # legend under the map, two lines (the map is narrow now)
-    lx, ly = 20, y0 + 208
+            for (_, r, _, _, _, lon, lat) in BRIEFS
+            if r not in ("EUROPE", "MIDDLE EAST")]
+    mx, my, mw, mh = 20, y0 + 24, 380, 164
+    dropped = world_map_dotted(cv, mx, my, mw, mh, pins, dots, leaders)
+    assert not dropped, dropped
+    # legend under the map, two lines of region colours only
+    lx, ly = 20, y0 + 192
     for name, color in REGIONS[:4]:
         cv.circle(lx + 4, ly + 6, 4, color)
         lx += 11
         draw_text(cv, lx, ly, name, 0.85, INK, bold=True)
         lx += int(text_w(name, 0.85, bold=True)) + 10
-    lx, ly = 20, y0 + 222
+    lx, ly = 20, y0 + 208
     for name, color in REGIONS[4:]:
         cv.circle(lx + 4, ly + 6, 4, color)
         lx += 11
         draw_text(cv, lx, ly, name, 0.85, INK, bold=True)
         lx += int(text_w(name, 0.85, bold=True)) + 10
-    draw_text(cv, 20, y0 + 236,
-              "Red pins: stories 1–13 · dots: briefs 14–45", 0.9, MUTED)
+    # one clean caption line under the legend: what the red pins are
+    # and what the dots are (no text floating inside the map panel)
+    draw_text(cv, 20, y0 + 224, "Red pins:", 0.85, RED, bold=True)
+    draw_text(cv, 20 + int(text_w("Red pins: ", 0.85, bold=True)), y0 + 224,
+              "3 · 6 · 10 · 13 — dots: briefs outside the key",
+              0.85, MUTED)
+    # Europe & Middle East key: red number chips + place names, two rows
+    draw_text(cv, 20, y0 + 240, "EUROPE & THE MIDDLE EAST", 0.9,
+              RED, bold=True)
+    key_rows = [[(1, "Kerch"), (2, "Bahrain"), (4, "Gulf"), (5, "Russia"),
+                 (7, "Romania")],
+                [(8, "Knesset"), (9, "Riyadh"), (11, "Turin"), (12, "COP31")]]
+    for ri, row in enumerate(key_rows):
+        kx = 20
+        ky = y0 + 254 + ri * 17
+        for num, place in row:
+            nw = int(text_w(str(num), 0.9, bold=True)) + 6
+            cv.rect(kx, ky, nw, 15, RED)
+            draw_text(cv, kx + 3, ky + 2, str(num), 0.9, (255, 255, 255),
+                      bold=True)
+            draw_text(cv, kx + nw + 4, ky + 1, place, 0.85, INK, bold=True)
+            kx += nw + 4 + int(text_w(place, 0.85, bold=True)) + 14
     # briefs in 3 columns (11 / 11 / 10): red number + place + headline
     # + source, scale 0.85, 12px line pitch, 26px item pitch
     col_x = [420, 620, 820]
@@ -304,17 +337,20 @@ def bottom_band(cv):
 
 def footer(cv):
     # red-bordered DATE CHECK box, from our own research only
-    cv.rect(20, 956, 984, 38, (255, 255, 255))
-    cv.hline(20, 1004, 956, RED, 2)
-    cv.hline(20, 1004, 993, RED, 2)
-    cv.vline(20, 956, 993, RED, 2)
-    cv.vline(1003, 956, 993, RED, 2)
-    draw_text(cv, 30, 962, "DATE CHECK", 1, RED, bold=True)
-    msg = ("Left out on purpose — the first Kerch Bridge strike fell on "
-           "Tuesday 17 November; the second strike is story 1. Eight "
-           "weaker Wednesday stories were cut for space, not for date.")
+    # exactly 2 lines: the eight cut stories are named, like top 1's list
+    cv.rect(20, 952, 984, 40, (255, 255, 255))
+    cv.hline(20, 1004, 952, RED, 2)
+    cv.hline(20, 1004, 991, RED, 2)
+    cv.vline(20, 952, 991, RED, 2)
+    cv.vline(1003, 952, 991, RED, 2)
+    draw_text(cv, 30, 958, "DATE CHECK", 1, RED, bold=True)
+    msg = ("Left out on purpose — the first Kerch strike fell on "
+           "Tuesday 17 November; the second strike is story 1. Cut: "
+           "Antalya AI pledge · Rubio outages · Navy chief grilled "
+           "· Fed's Williams · Pakistan at the UN · Nvidia export panel "
+           "· Apple glitches · FAA installs.")
     lines = wrap_text(msg, 1, 984 - 140)
-    ly = 962
+    ly = 958
     for ln in lines[:2]:
         draw_text(cv, 140, ly, ln, 1, INK)
         ly += 13
@@ -329,14 +365,14 @@ def render():
     masthead(cv)
     tally_bar(cv)
     numbers_strip(cv)
-    # 3 big leads
+    # 3 big leads: 316 wide, 16px gaps, so the row breathes
     for i, feat in enumerate(FEATURED[:3]):
-        lead_card(cv, 20 + i * 332, 188, 320, feat)
+        lead_card(cv, 20 + i * 332, 188, 316, feat)
     # 10 smaller in 2 rows of 5
     for r in range(2):
         for c in range(5):
             feat = FEATURED[3 + r * 5 + c]
-            small_card(cv, 20 + c * 199, 372 + r * 134, 187, feat)
+            small_card(cv, 20 + c * 199, 386 + r * 127, 187, feat)
     bottom_band(cv)
     footer(cv)
     return cv
