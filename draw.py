@@ -202,11 +202,13 @@ class Canvas:
 
 
 # ---------------------------------------------------------------- font
-# Real font glyphs: outlines extracted from the DejaVu fonts (see fontdata.py),
-# rendered as FILLED polygons with the even-odd rule on the 2x supersampled
-# canvas. This is real printed type (DejaVu Sans / DejaVu Serif Bold), not a
-# stroke font: lowercase is true lowercase, counters are real holes, curves
-# are the font's own curves. No runtime dependency on any font file.
+# Real font glyphs: outlines extracted from the Liberation fonts (see
+# fontdata.py), rendered as FILLED polygons with the even-odd rule on
+# the 2x supersampled canvas. This is real printed type (Liberation
+# Serif / Liberation Sans — Times/Arial metrics, the classic newspaper
+# faces), not a stroke font: lowercase is true lowercase, counters are
+# real holes, curves are the font's own curves. No runtime dependency
+# on any font file.
 from fontdata import FONTS, UPM  # noqa: E402
 
 # Logical metrics: one em = 14 * scale px; the baseline sits 12.5 * scale px
@@ -219,7 +221,7 @@ _TRACK = 0.5  # extra tracking, logical px per char, times scale
 
 def _face(font, bold):
     if font == "serif":
-        return "serif-bold"
+        return "serif-bold" if bold else "serif"
     return "sans-bold" if bold else "sans"
 
 
